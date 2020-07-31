@@ -11,6 +11,10 @@ Only thin you should need is to have the Python 3 installed. Game does not use a
 # Running the game
 
 To run the game execute `main.py` script.
+There are three parameters you can configure in the `main.py` file.
+* `end_count` Number of marks in a row, column or diagonale to necessary to end game
+* `board_size` Number of tiles on the board in each dimension (size of board)
+* `window_size` Size of GUI window in pixels
 
 # Playing the game
 
