@@ -9,7 +9,7 @@ class Point:
 		self.x = x
 		self.y = y
 
-	def distance_to(self, other: Point) -> float:
+	def distance_to(self, other: 'Point') -> float:
 		"""
 		Computes distance to another point.
 		:param other: Another Point
