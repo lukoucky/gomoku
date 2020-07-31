@@ -21,7 +21,8 @@ class View:
 		self.color_tile_border = '#d8d8d8'
 		self.color_background = 'white'
 		self.color_winning = 'red'
-		self.mark_font = 'Times 50 bold'
+		scale = window_size // board_size
+		self.mark_font = f'Times {scale} bold'
 
 		# Constants
 		self.tile_size = self.canvas_height / self.board_size
