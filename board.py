@@ -15,6 +15,11 @@ class Board:
 			for y in range(self.size):
 				self.tiles[x][y] = BoardTile(x, y)
 
+	def is_valid_move(self, position):
+		if self.tiles[position.x][position.y].is_empty():
+			return True
+		return False
+
 	def check_end(self):
 		"""
 		Check if the game ends meaning that one of the players 

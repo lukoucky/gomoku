@@ -45,7 +45,7 @@ class Game:
 		:param position: Point with position on board where the move should be made
 		:param player: Player that is making the move
 		"""
-		if self.is_players_move(player):
+		if self.is_players_move(player) and self.board.is_valid_move(position):
 			self.board.set_move(position, player.mark)
 			result = self.board.check_end()
 
