@@ -4,14 +4,11 @@ from utils import Point, MouseState, Mark
 
 class Game:
 	"""
-	Represents the game with is machanics.
+	Represents the game machanics.
 	It suppose to be a Model in MVVM pattern.
 	"""
-	def __init__(self, view, end_count, player_x, player_o):
-		self.board = Board(10, end_count)
-
-		# TODO: Get rid of the view. It should not be in Model of MVVM
-		self.view = view
+	def __init__(self, player_x, player_o, end_count, board_size):
+		self.board = Board(board_size, end_count)
 
 		self.player_x = player_x
 		self.player_x.bind_game_move(self.on_received_move)
@@ -19,7 +16,26 @@ class Game:
 		self.player_o = player_o
 		self.player_o.bind_game_move(self.on_received_move)
 
-		self.state = GameState.WAITING_FOR_X			
+		self.draw_mark_listener = None
+		self.end_game_listener = None
+
+		self.state = GameState.WAITING_FOR_X		
+
+	def bind_draw_mark_listener(self, listener):
+		"""
+		Binds listener for new mark update
+		:param listener: Method that must accept Point and Player and notifiy
+						 View to draw new mark from Player
+		"""
+		self.draw_mark_listener = listener
+
+	def bind_end_game_listener(self, listener):
+		"""
+		Binds listener for end game
+		:param listener: Method that must accept list of winning Points and Player and 
+						 notifiy View to draw end game screen
+		"""
+		self.end_game_listener = listener
 
 	def on_received_move(self, position, player):
 		"""
@@ -32,14 +48,13 @@ class Game:
 		if self.is_players_move(player):
 			self.board.set_move(position, player.mark)
 			result = self.board.check_end()
-			self.view.draw_mark(position, player.mark, player.color)
 
 			if result is not None:
-				self.view.draw_end_game(result, player.mark)
 				self.state = GameState.END
+				self.end_game_listener(result, player)
 			else:
+				self.draw_mark_listener(position, player)
 				self.switch_players_and_move()
-
 
 	def is_players_move(self, player):
 		"""

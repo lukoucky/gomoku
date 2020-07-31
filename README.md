@@ -20,7 +20,7 @@ Game have only two players.
 
 # Future plans
 
-* Clean up the code. There are few TODO's and few places that are not MVVM compatible (Like when Model is directly communicating with View ...).
+* Clean up the code. There are few TODO's and few places that are probably not 100% MVVM
 * Add some menu with buttons and labels so you can restart game, start new one after the end, chose your color and so on.
 * Add another AI players. I would like to add few other AI players using ML (Alpha-Bete pruning, Reinforcement learning, Deep learning, ...)
 * Add easy way for 2 Human Players to play
