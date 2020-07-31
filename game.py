@@ -1,13 +1,15 @@
 from enum import Enum
 from board import Board
 from utils import Point, MouseState, Mark
+from player import Player
+from typing import List, Callable, Optional
 
 class Game:
 	"""
 	Represents the game machanics.
 	It suppose to be a Model in MVVM pattern.
 	"""
-	def __init__(self, player_x, player_o, end_count, board_size):
+	def __init__(self, player_x: Player, player_o: Player, end_count: int, board_size: int) -> None:
 		self.board = Board(board_size, end_count)
 
 		self.player_x = player_x
@@ -21,7 +23,7 @@ class Game:
 
 		self.state = GameState.WAITING_FOR_X		
 
-	def bind_draw_mark_listener(self, listener):
+	def bind_draw_mark_listener(self, listener: Callable) -> None:
 		"""
 		Binds listener for new mark update
 		:param listener: Method that must accept Point and Player and notifiy
@@ -29,7 +31,7 @@ class Game:
 		"""
 		self.draw_mark_listener = listener
 
-	def bind_end_game_listener(self, listener):
+	def bind_end_game_listener(self, listener: Callable) -> None:
 		"""
 		Binds listener for end game
 		:param listener: Method that must accept list of winning Points and Player and 
@@ -37,7 +39,7 @@ class Game:
 		"""
 		self.end_game_listener = listener
 
-	def on_received_move(self, position, player):
+	def on_received_move(self, position: Point, player: Player) -> None:
 		"""
 		Callback function that is called by players. It receives new move
 		and if the move is valid and player is expected to make a move it is set 
@@ -56,7 +58,7 @@ class Game:
 				self.draw_mark_listener(position, player)
 				self.switch_players_and_move()
 
-	def is_players_move(self, player):
+	def is_players_move(self, player: Player) -> bool:
 		"""
 		Check if the player that is making the move is entitled to do so.
 		:param player: Player that is making the move
@@ -68,7 +70,7 @@ class Game:
 			return True
 		return False
 
-	def switch_players_and_move(self):
+	def switch_players_and_move(self) -> None:
 		"""
 		Switch game state to next player and send command to the player to make move.
 		"""

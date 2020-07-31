@@ -1,14 +1,16 @@
 from game import Game
 from view import View
-from utils import Mark
-from player import RandomPlayer, HumanPlayer
+from utils import Mark, Point
+from player import Player, RandomPlayer, HumanPlayer
+from typing import List
+
 
 class ViewModel():
 	"""
 	Class that connects Game with View and runs the game.
 	It suppose to be a View Model in MVVM pattern.
 	"""
-	def __init__(self):
+	def __init__(self) -> None:
 		# Number of marks in a row, column or diagonale to end game
 		end_count = 4
 
@@ -28,7 +30,7 @@ class ViewModel():
 		self.game.bind_draw_mark_listener(self.on_new_mark)
 		self.game.bind_end_game_listener(self.on_end_game)
 
-	def on_tile_click(self, position):
+	def on_tile_click(self, position: Point) -> None:
 		"""
 		Bind View's callback of new click on tile with Human Players
 		send_move() method.
@@ -36,7 +38,7 @@ class ViewModel():
 		"""
 		self.px.send_move(position)
 
-	def on_new_mark(self, position, player):
+	def on_new_mark(self, position: Point, player: Player):
 		"""
 		Binds View's callback of new mark with new mark action in Game.
 		:param position: Point with position of the new mark on board
@@ -44,7 +46,7 @@ class ViewModel():
 		"""
 		self.view.draw_mark(position, player.mark, player.color)
 
-	def on_end_game(self, positions, player):
+	def on_end_game(self, positions: List[Point], player: Player):
 		"""
 		Binds View's callback of end game with end game action in Game.
 		:param positions: List of Points with positions of the winning marks
@@ -52,7 +54,7 @@ class ViewModel():
 		"""
 		self.view.draw_end_game(positions, player.mark)
 
-	def run(self):
+	def run(self) -> None:
 		"""
 		Runs the game
 		"""

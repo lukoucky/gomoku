@@ -5,11 +5,11 @@ class Point:
 	"""
 	Represents simple 2D point.
 	"""
-	def __init__(self, x = 0, y = 0):
+	def __init__(self, x: int = 0, y: int = 0) -> None:
 		self.x = x
 		self.y = y
 
-	def distance_to(self, other):
+	def distance_to(self, other: Point) -> float:
 		"""
 		Computes distance to another point.
 		:param other: Another Point

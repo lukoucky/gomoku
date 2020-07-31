@@ -1,11 +1,35 @@
-from utils import Point
+from utils import Point, Mark
+from typing import List, Optional
+
+
+class BoardTile:
+	"""
+	Represents one tile (box) on the game board.
+	"""
+	def __init__(self, position_x: int, position_y: int) -> None:
+		self.position_x = position_x
+		self.position_y = position_y
+		self.mark = None
+
+	def __repr__(self):
+		return f'[{self.position_x}:{self.position_y}]'
+
+	def is_empty(self) -> bool:
+		"""
+		Check if tile is empty (no mark have been set)
+		:return: True if tile is empty, False otherwies
+		"""
+		if self.mark is None:
+			return True
+		return False
+
 
 class Board:
 	"""
 	Represents the game board.
 	"""
 
-	def __init__(self, size, end_count=4):
+	def __init__(self, size: int, end_count: int = 4) -> None:
 		self.size = size
 		self.tiles = []
 		self.end_count = end_count
@@ -15,12 +39,12 @@ class Board:
 			for y in range(self.size):
 				self.tiles[x][y] = BoardTile(x, y)
 
-	def is_valid_move(self, position):
+	def is_valid_move(self, position: List[Point]) -> bool:
 		if self.tiles[position.x][position.y].is_empty():
 			return True
 		return False
 
-	def check_end(self):
+	def check_end(self) -> Optional[List[Point]]:
 		"""
 		Check if the game ends meaning that one of the players 
 		have `end_count` marks in row, column or diagonale
@@ -35,7 +59,7 @@ class Board:
 						return result
 		return None
 	
-	def check_around(self, x, y):
+	def check_around(self, x: int, y: int) -> Optional[List[str]]:
 		"""
 		Checks all 8 direction from given position for row, column or diagonale
 		of marks that would mean end of game.
@@ -53,7 +77,7 @@ class Board:
 				return points
 		return None
 
-	def check_direction(self, x, y, dx, dy):
+	def check_direction(self, x: int, y: int, dx: int, dy: int) -> Optional[List[BoardTile]]:
 		"""
 		Check in direction [dx,dy] from point [x,y] for row, column or diagonale of
 		`end_count` marks. Function expects that [x,y] is not empty.
@@ -76,7 +100,7 @@ class Board:
 				return None
 		return result
 
-	def set_move(self, position, mark):
+	def set_move(self, position: Point, mark: Mark) -> None:
 		"""
 		Setter for new move made by player.
 		:param position: Point where the move was made
@@ -92,25 +116,3 @@ class Board:
 				s += str(self.tiles[x][y]) + ', '
 			s = s[:-2] + '\n'
 		return s
-
-
-class BoardTile:
-	"""
-	Represents one tile (box) on the game board.
-	"""
-	def __init__(self, position_x, position_y):
-		self.position_x = position_x
-		self.position_y = position_y
-		self.mark = None
-
-	def __repr__(self):
-		return f'[{self.position_x}:{self.position_y}]'
-
-	def is_empty(self):
-		"""
-		Check if tile is empty (no mark have been set)
-		:return: True if tile is empty, False otherwies
-		"""
-		if self.mark is None:
-			return True
-		return False
