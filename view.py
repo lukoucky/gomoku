@@ -11,6 +11,7 @@ class View:
 		self.canvas_height = window_size 
 		self.board_size = board_size
 		self.root = Tk()
+		self.root.title('Tic Tac Toe')
 		self.frame = Frame(self.root, width=window_size, height=window_size)
 		self.canvas = Canvas(self.frame, width=window_size, height=window_size)
 		self.mouse_state = MouseHandler()
