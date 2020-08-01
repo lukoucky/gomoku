@@ -85,7 +85,7 @@ class Board:
 		:return: None if game can continue. Otherwies returns list of Points
 				 with positions of winning marks.
 		"""
-		for direction in [[0,1], [1,1], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1]]:
+		for direction in [[-1,0], [-1,-1], [0,-1], [1,-1]]:
 			results = self.check_direction(x, y, direction[0], direction[1])
 			if results is not None:
 				points = []
