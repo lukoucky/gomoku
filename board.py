@@ -28,7 +28,6 @@ class Board:
 	"""
 	Represents the game board.
 	"""
-
 	def __init__(self, size: int, end_count: int = 4) -> None:
 		self.size = size
 		self.tiles = []
@@ -38,6 +37,17 @@ class Board:
 			self.tiles.append([0]*self.size)
 			for y in range(self.size):
 				self.tiles[x][y] = BoardTile(x, y)
+
+	def copy(self):
+		"""
+		Creates copy of the board to prevent slow deepcopy method unusable in minimax.
+		:return: Copy of this Board object
+		"""
+		b = Board(self.size, self.end_count)
+		for x in range(self.size):
+			for y in range(self.size):
+				b.tiles[x][y].mark = self.tiles[x][y].mark
+		return b
 
 	def is_valid_move(self, position: Point) -> bool:
 		"""
