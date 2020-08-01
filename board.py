@@ -14,6 +14,14 @@ class BoardTile:
 	def __repr__(self):
 		return f'[{self.position_x}:{self.position_y}]'
 
+	def __str__(self):
+		if self.mark is None:
+			return '.'
+		elif self.mark == Mark.X:
+			return 'x'
+		else:
+			return 'o'
+
 	def is_empty(self) -> bool:
 		"""
 		Check if tile is empty (no mark have been set)
@@ -136,6 +144,18 @@ class Board:
 				if self.tiles[x][y].is_empty():
 					empty_tiles.append(self.tiles[x][y])
 		return empty_tiles
+
+	def get_hash_string(self):
+		s = ''
+		for i in range(self.size):
+			s += ''.join(map(str,self.tiles[i]))
+		return s
+
+	def __eq__(self, other):
+		return self.get_hash_string() == other.get_hash_string()
+
+	def __hash__(self):
+		return hash(self.get_hash_string())
 
 	def __repr__(self):
 		s = ''
