@@ -6,7 +6,7 @@ Simple implementation of Gomoku game in Python using MVVM pattern without any li
 It was developed as a training in MVVM patter. If you understand MVVM better or just see something you don't like in my code I would be grateful for any comments or criticism.
 
 ## Preconditions to run the game
-Only thin you should need is to have the Python 3 installed. Game does not use any library dependencies, just make sure that your Python 3 distribution have tkinter.
+Only thin you should need is to have the Python version 3.5+ installed. Game does not use any library dependencies, just make sure that your Python distribution have tkinter.
 
 ## Running the game
 
@@ -18,9 +18,10 @@ There are three parameters you can configure in the `main.py` file.
 
 ## Playing the game
 
-Game have only two players. 
+Game have only three players to choose from. 
 * Human player - that is you. You can click on game board with mouse to make your move
 * Random player - only AI you can play against so far. It just chose random valid move and play it
+* MiniMax player - using minimax with alpha-beta pruning to find the best move. Still work in progress and not recomended for boards larger than 6x6.
 
 ## Future plans
 
