@@ -47,7 +47,7 @@ class MiniMax():
 					child = deepcopy(self.board)
 					child.set_move(Point(x,y), self.mark) 
 					move = MiniMaxMove(Point(x,y))
-					v = self.minimax(child, len(child.get_empty_tiles()), False, move)
+					v = self.minimax(child, len(child.get_empty_tiles()), False, move, -math.inf, math.inf)
 					move.value = v
 					self.moves.append(move)
 					print(f'Done move {len(self.moves)} from {n_empty}')
@@ -62,7 +62,7 @@ class MiniMax():
 				return move.position
 
 		# Else find moste winnable move
-		best_score = -99999
+		best_score = -math.inf
 		best_move = None
 		total_moves = 0
 		for move in self.moves:
@@ -75,7 +75,7 @@ class MiniMax():
 		return best_move
 
 
-	def minimax(self, node: List[BoardTile], depth: int, is_maximizing: bool, move: MiniMaxMove) -> int:
+	def minimax(self, node: List[BoardTile], depth: int, is_maximizing: bool, move: MiniMaxMove, alpha, beta) -> int:
 		"""
 		MiniMax algorithm search through all possible game states and finds the 
 		best for the player.
@@ -95,14 +95,20 @@ class MiniMax():
 			return winner
 
 		if is_maximizing:
-			value = -999999
+			value = -math.inf
 			for child in self.get_child_nodes(node, True):
-				value = max(value, self.minimax(child, depth -1, False, move))
+				value = max(value, self.minimax(child, depth -1, False, move, alpha, beta))
+				alpha = max(alpha, value)
+				if beta <= alpha:
+					break
 			return value
 		else:
-			value = 999999
+			value = math.inf
 			for child in self.get_child_nodes(node, False):
-				value = min(value, self.minimax(child, depth -1, True, move))
+				value = min(value, self.minimax(child, depth -1, True, move, alpha, beta))
+				beta = min(beta, value)
+				if beta <= alpha:
+					break
 			return value
 
 
