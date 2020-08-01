@@ -9,13 +9,14 @@ class View:
 	It suppose to be a View in MVVM pattern.
 	"""
 	def __init__(self, window_size: int = 500, board_size:int  = 10) -> None:
+		self.bottom_offset = 50
 		self.canvas_width = window_size 
 		self.canvas_height = window_size 
 		self.board_size = board_size
 		self.root = Tk()
 		self.root.title('Tic Tac Toe')
-		self.frame = Frame(self.root, width=window_size, height=window_size)
-		self.canvas = Canvas(self.frame, width=window_size, height=window_size)
+		self.frame = Frame(self.root, width=window_size, height=window_size+self.bottom_offset)
+		self.canvas = Canvas(self.frame, width=window_size, height=window_size+self.bottom_offset)
 		self.mouse_state = MouseHandler()
 		self.tile_click_listener = None
 
@@ -42,11 +43,11 @@ class View:
 		"""
 		Draws empty board to canvas.
 		"""
-		self.canvas.create_rectangle(0, 0, self.canvas_width, self.canvas_height, fill=self.color_background)
+		self.canvas.create_rectangle(0, 0, self.canvas_width, self.canvas_height+self.bottom_offset, fill=self.color_background)
 		for x in range(0, self.canvas_width, self.canvas_width//self.board_size):
 			self.canvas.create_line(x, 0, x, self.canvas_width, fill=self.color_tile_border)
 
-		for y in range(0, self.canvas_width, self.canvas_height//self.board_size):
+		for y in range(0, self.canvas_width+1, self.canvas_height//self.board_size):
 			self.canvas.create_line(0, y, self.canvas_height, y, fill=self.color_tile_border)
 
 	def draw_mark(self, position: Point, mark: Mark, color: str) -> None:
@@ -70,6 +71,12 @@ class View:
 		:param positions: List of Points where with wininng row, column or diagonale. Points as a tiles on board not the pixels.
 		:param mark: Marker that should be draw
 		"""
+		if mark == Mark.O:
+			mark_text = 'O'
+		else:
+			mark_text = 'X'
+		mark_text += '  is the winner'
+
 		for position in positions:
 			self.draw_mark(position, mark, self.color_winning)
 
@@ -78,6 +85,7 @@ class View:
 		x1 = positions[-1].x * self.tile_size + self.mark_offset
 		y1 = positions[-1].y * self.tile_size + self.mark_offset
 		self.canvas.create_line(x0, y0, x1, y1, fill=self.color_winning, width=self.winning_line_width)
+		self.canvas.create_text(self.canvas_height/2, self.canvas_width + self.mark_offset, fill=self.color_winning, font=self.mark_font, text=mark_text)
 
 	def bind_tile_click_listener(self, listener: Callable) -> None:
 		"""
