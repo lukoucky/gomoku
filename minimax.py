@@ -1,7 +1,6 @@
 from utils import Point, Mark
 from typing import List, Callable, Optional
 from board import BoardTile
-from copy import deepcopy
 import math
 
 class MiniMaxMove():
@@ -13,18 +12,12 @@ class MiniMaxMove():
 		self.value = -99999
 
 	def add_result(self, result):
-		# print(f'Adding result {result} to {self.position}')
 		if result == 1:
 			self.end_win += 1
 		elif result == -1:
 			self.end_lose += 1
 		else:
 			self.end_draw += 1
-
-	def always_win(self):
-		if self.end_win > 0 and self.end_lose == 0 and self.end_draw == 0:
-			return True
-		return False
 
 	def get_score(self):
 		# return self.end_win - self.end_lose
@@ -44,7 +37,7 @@ class MiniMax():
 		for x in range(self.board.size):
 			for y in range(self.board.size):
 				if self.board.tiles[x][y].is_empty():
-					child = deepcopy(self.board)
+					child = self.board.copy()
 					child.set_move(Point(x,y), self.mark) 
 					move = MiniMaxMove(Point(x,y))
 					v = self.minimax(child, len(child.get_empty_tiles()), False, move, -math.inf, math.inf)
@@ -56,12 +49,6 @@ class MiniMax():
 					print('--------')
 
 	def get_best_move(self):
-		# Check if there is move that wins always
-		for move in self.moves:
-			if move.always_win():
-				return move.position
-
-		# Else find moste winnable move
 		best_score = -math.inf
 		best_move = None
 		total_moves = 0
@@ -71,11 +58,10 @@ class MiniMax():
 				best_score = move.get_score()
 				best_move = move.position
 
-		print('Total moves:', total_moves)
 		return best_move
 
 
-	def minimax(self, node: List[BoardTile], depth: int, is_maximizing: bool, move: MiniMaxMove, alpha, beta) -> int:
+	def minimax(self, node: List[BoardTile], depth: int, is_maximizing: bool, move: MiniMaxMove, alpha: int, beta: int) -> int:
 		"""
 		MiniMax algorithm search through all possible game states and finds the 
 		best for the player.
@@ -85,11 +71,7 @@ class MiniMax():
 							  maximizin (is played by this player), False otherwise
 		:return: Value of currently serached node
 		"""
-		# print('------------------------------------------')
-		# print(f'Minimax function starts in depth {depth}, is minimizing {is_maximizing}')
-		# print(node)
 		winner = self.get_board_result(node)
-		# print(f'get_board_result = {winner}')
 		if depth == 0 or winner is not None:
 			move.add_result(winner)
 			return winner
@@ -131,7 +113,7 @@ class MiniMax():
 		for x in range(board.size):
 			for y in range(board.size):
 				if board.tiles[x][y].is_empty():
-					child = deepcopy(board)
+					child = board.copy()
 					child.set_move(Point(x,y), mark) 
 					child_nodes.append(child)
 		return child_nodes
@@ -143,18 +125,12 @@ class MiniMax():
 		:return: None if game is not finnished. -1 if player lost, 1 if player won and 0 for draw.
 		"""
 		result = board.check_end()
-		# print('get_board_result ',result)
-
 		if result is None:
-			# Still some empty tiles -> Game can continue
 			return None
 
 		if len(result) == 0:
-			#  Draw
 			return 0
 
 		if board.tiles[result[0].x][result[0].y].mark == self.mark:
-			# There is a winner on board and it is the player -> +1
 			return 1
-		# There is a winner on board and it is not the player -> -1
 		return -1
