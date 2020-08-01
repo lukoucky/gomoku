@@ -1,8 +1,9 @@
 from abc import ABC, abstractmethod
 from random import randrange
 from utils import Point, Mark
-from typing import List, Callable
+from typing import List, Callable, Optional
 from board import BoardTile
+from minimax import MiniMax
 
 
 class Player(ABC):
@@ -41,19 +42,6 @@ class Player(ABC):
 		"""
 		self.move_listener = move_listener
 
-	def get_empty_tiles(self, board: List[BoardTile]) -> List[BoardTile]:
-		"""
-		Returns list of empty tiles on board.
-		:param board: 2D list with current board.
-		:return: Listo of empty board tiles.
-		"""
-		empty_tiles = []
-		for x in range(board.size):
-			for y in range(board.size):
-				if board.tiles[x][y].is_empty():
-					empty_tiles.append(board.tiles[x][y])
-		return empty_tiles
-
 
 class HumanPlayer(Player):
 	"""
@@ -84,6 +72,24 @@ class RandomPlayer(Player):
 		Selects random empty tile and move there.
 		:param board: 2D list with current board.
 		"""
-		empty_tiles = self.get_empty_tiles(board)
+		empty_tiles = board.get_empty_tiles()
 		tile_id = randrange(len(empty_tiles))
 		self.send_move(Point(empty_tiles[tile_id].position_x, empty_tiles[tile_id].position_y))
+
+
+class MiniMaxPlayer(Player):
+	"""
+	Player is using MiniMax algorthm to find the best move.
+	"""
+	def __init__(self, end_count: int, mark: Mark, color: str) -> None:
+		Player.__init__(self, 'MiniMax player', end_count, mark, color)
+
+	def move(self, board: List[BoardTile]) -> None:
+		"""
+		Selects best move using minimax algorithm. Some special cases
+		like first move, one move from winning are hardcoded.
+		:param board: 2D list with current board.
+		"""
+		mm = MiniMax(board, self.mark)
+		mm.compute()
+		self.send_move(mm.get_best_move())
