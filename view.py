@@ -68,16 +68,19 @@ class View:
 		:param positions: List of Points where with wininng row, column or diagonale. Points as a tiles on board not the pixels.
 		:param mark: Marker that should be draw
 		"""
-		mark_text = self.mark_strings[mark] + '  is the winner'
+		if len(positions) == 0:
+			mark_text = 'Draw'
+		else:
+			mark_text = self.mark_strings[mark] + '  is the winner'
 
 		for position in positions:
 			self.draw_mark(position, mark, self.color_winning)
-
-		x0 = positions[0].x * self.tile_size + self.mark_offset
-		y0 = positions[0].y * self.tile_size + self.mark_offset
-		x1 = positions[-1].x * self.tile_size + self.mark_offset
-		y1 = positions[-1].y * self.tile_size + self.mark_offset
-		self.canvas.create_line(x0, y0, x1, y1, fill=self.color_winning, width=self.winning_line_width)
+			x0 = positions[0].x * self.tile_size + self.mark_offset
+			y0 = positions[0].y * self.tile_size + self.mark_offset
+			x1 = positions[-1].x * self.tile_size + self.mark_offset
+			y1 = positions[-1].y * self.tile_size + self.mark_offset
+			self.canvas.create_line(x0, y0, x1, y1, fill=self.color_winning, width=self.winning_line_width)
+		
 		self.canvas.create_text(self.canvas_height/2, self.canvas_width + self.mark_offset, fill=self.color_winning, font=self.mark_font, text=mark_text)
 
 	def bind_tile_click_listener(self, listener: Callable) -> None:
