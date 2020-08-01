@@ -31,6 +31,7 @@ class MiniMax():
 		self.board = board
 		self.mark = mark
 		self.moves = []
+		self.max_depth = 3
 
 	def compute(self):
 		n_empty = len(self.board.get_empty_tiles())
@@ -40,7 +41,8 @@ class MiniMax():
 					child = self.board.copy()
 					child.set_move(Point(x,y), self.mark) 
 					move = MiniMaxMove(Point(x,y))
-					v = self.minimax(child, len(child.get_empty_tiles()), False, move, -math.inf, math.inf)
+					depth = min(len(child.get_empty_tiles()), self.max_depth)
+					v = self.minimax(child, depth, False, move, -math.inf, math.inf)
 					move.value = v
 					self.moves.append(move)
 					print(f'Done move {len(self.moves)} from {n_empty}')
@@ -74,6 +76,8 @@ class MiniMax():
 		winner = self.get_board_result(node)
 		if depth == 0 or winner is not None:
 			move.add_result(winner)
+			if winner is None:
+				return 0
 			return winner
 
 		if is_maximizing:
