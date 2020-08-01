@@ -5,10 +5,10 @@ Simple implementation of Tic Tac Toe game in Python using MVVM pattern without a
 
 It was developed as a training in MVVM patter. If you understand MVVM better or just see something you don't like in my code I would be grateful for any comments or criticism.
 
-# Preconditions to run the game
+## Preconditions to run the game
 Only thin you should need is to have the Python 3 installed. Game does not use any library dependencies, just make sure that your Python 3 distribution have tkinter.
 
-# Running the game
+## Running the game
 
 To run the game execute `main.py` script.
 There are three parameters you can configure in the `main.py` file.
@@ -16,13 +16,13 @@ There are three parameters you can configure in the `main.py` file.
 * `board_size` Number of tiles on the board in each dimension (size of board)
 * `window_size` Size of GUI window in pixels
 
-# Playing the game
+## Playing the game
 
 Game have only two players. 
 * Human player - that is you. You can click on game board with mouse to make your move
 * Random player - only AI you can play against so far. It just chose random valid move and play it
 
-# Future plans
+## Future plans
 
 * Clean up the code. There are few TODO's and few places that are probably not 100% MVVM
 * Add some menu with buttons and labels so you can restart game, start new one after the end, chose your color and so on.
