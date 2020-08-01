@@ -10,7 +10,9 @@ class Game:
 	It suppose to be a Model in MVVM pattern.
 	"""
 	def __init__(self, player_x: Player, player_o: Player, end_count: int, board_size: int) -> None:
-		self.board = Board(board_size, end_count)
+		self.board_size = board_size
+		self.end_count = end_count
+		self.board = Board(self.board_size, self.end_count)
 
 		self.player_x = player_x
 		self.player_x.bind_game_move(self.on_received_move)
@@ -80,6 +82,14 @@ class Game:
 		else:
 			self.state = GameState.WAITING_FOR_O
 			self.player_o.move(self.board)
+
+	def restart(self):
+		"""
+		Restarts the game
+		"""
+		self.board = Board(self.board_size, self.end_count)
+		self.state = GameState.WAITING_FOR_X
+
 
 class GameState(Enum):
 	"""

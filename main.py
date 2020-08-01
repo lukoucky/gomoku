@@ -3,6 +3,7 @@ from view import View
 from utils import Mark, Point
 from player import Player, RandomPlayer, HumanPlayer
 from typing import List
+import time
 
 
 class ViewModel():
@@ -49,10 +50,19 @@ class ViewModel():
 	def on_end_game(self, positions: List[Point], player: Player):
 		"""
 		Binds View's callback of end game with end game action in Game.
+		After the winnig position is highlited for 3 second it restarts the game.
 		:param positions: List of Points with positions of the winning marks
 		:param player: Player that wins
 		"""
 		self.view.draw_end_game(positions, player.mark)
+		self.view.root.after(3000, self.restart)
+
+	def restart(self):
+		"""
+		Restarts the game
+		"""
+		self.view.init_board()
+		self.game.restart()
 
 	def run(self) -> None:
 		"""
