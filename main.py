@@ -25,6 +25,7 @@ class ViewModel():
 		self.view.bind_tile_click_listener(self.on_tile_click)
 
 		self.px = HumanPlayer(end_count, Mark.X, '#32a852')
+		# self.px = RandomPlayer(end_count, Mark.X, '#32a852')
 		self.po = RandomPlayer(end_count, Mark.O, 'black')
 
 		self.game = Game(self.px, self.po, end_count, board_size)

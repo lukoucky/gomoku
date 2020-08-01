@@ -10,6 +10,7 @@ class Game:
 	It suppose to be a Model in MVVM pattern.
 	"""
 	def __init__(self, player_x: Player, player_o: Player, end_count: int, board_size: int) -> None:
+		self.state = GameState.INIT	
 		self.board_size = board_size
 		self.end_count = end_count
 		self.board = Board(self.board_size, self.end_count)
@@ -23,8 +24,6 @@ class Game:
 		self.draw_mark_listener = None
 		self.end_game_listener = None
 
-		self.state = GameState.WAITING_FOR_X		
-
 	def bind_draw_mark_listener(self, listener: Callable) -> None:
 		"""
 		Binds listener for new mark update
@@ -32,6 +31,7 @@ class Game:
 						 View to draw new mark from Player
 		"""
 		self.draw_mark_listener = listener
+		self.start_if_initialized()
 
 	def bind_end_game_listener(self, listener: Callable) -> None:
 		"""
@@ -40,6 +40,16 @@ class Game:
 						 notifiy View to draw end game screen
 		"""
 		self.end_game_listener = listener
+		self.start_if_initialized()
+
+	def start_if_initialized(self) -> None:
+		"""
+		Starts the game if it is properly initialized. That means that 
+		draw_mark_listener and end_game_listener is set.
+		"""
+		if not self.end_game_listener is None and not self.draw_mark_listener is None:
+			self.state = GameState.WAITING_FOR_X
+			self.player_x.move(self.board)
 
 	def on_received_move(self, position: Point, player: Player) -> None:
 		"""
@@ -89,12 +99,14 @@ class Game:
 		"""
 		self.board = Board(self.board_size, self.end_count)
 		self.state = GameState.WAITING_FOR_X
+		self.player_x.move(self.board)
 
 
 class GameState(Enum):
 	"""
 	Represents possible states of game
 	"""
-	WAITING_FOR_X = 0
-	WAITING_FOR_O = 1
-	END = 2
+	INIT = 0
+	WAITING_FOR_X = 1
+	WAITING_FOR_O = 2
+	END = 3
