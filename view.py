@@ -26,6 +26,7 @@ class View:
 		self.color_winning = 'red'
 		scale = window_size // board_size
 		self.mark_font = f'Times {scale} bold'
+		self.mark_strings = {Mark.X: 'x', Mark.O: 'o'}
 
 		# Constants
 		self.tile_size = self.canvas_height / self.board_size
@@ -57,13 +58,9 @@ class View:
 		:param mark: Marker that should be draw
 		:param color: Color string
 		"""
-		if mark == Mark.O:
-			mark_text = 'o'
-		else:
-			mark_text = 'x'
 		px = position.x * self.tile_size + self.mark_offset
 		py = position.y * self.tile_size + self.mark_offset
-		self.canvas.create_text(px, py, fill=color, font=self.mark_font, text=mark_text)
+		self.canvas.create_text(px, py, fill=color, font=self.mark_font, text=self.mark_strings[mark])
 
 	def draw_end_game(self, positions: List[Point], mark: Mark) -> None:
 		"""
@@ -71,11 +68,7 @@ class View:
 		:param positions: List of Points where with wininng row, column or diagonale. Points as a tiles on board not the pixels.
 		:param mark: Marker that should be draw
 		"""
-		if mark == Mark.O:
-			mark_text = 'O'
-		else:
-			mark_text = 'X'
-		mark_text += '  is the winner'
+		mark_text = self.mark_strings[mark] + '  is the winner'
 
 		for position in positions:
 			self.draw_mark(position, mark, self.color_winning)
