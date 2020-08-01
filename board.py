@@ -39,7 +39,12 @@ class Board:
 			for y in range(self.size):
 				self.tiles[x][y] = BoardTile(x, y)
 
-	def is_valid_move(self, position: List[Point]) -> bool:
+	def is_valid_move(self, position: Point) -> bool:
+		"""
+		CHeck if the move is valid - is to the empty tile.
+		:param position: Point with position of the move
+		:return: True if move is valid, False otherwise
+		"""
 		if self.tiles[position.x][position.y].is_empty():
 			return True
 		return False
