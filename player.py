@@ -2,7 +2,6 @@ from abc import ABC, abstractmethod
 from random import randrange
 from utils import Point, Mark
 from typing import List, Callable, Optional
-from board import BoardTile
 from minimax import MiniMax
 
 
@@ -20,7 +19,7 @@ class Player(ABC):
 
 	# TODO: Change from board to some safe copy of board that cannot alter game state
 	@abstractmethod
-	def move(self, board: List[BoardTile]) -> None:
+	def move(self, board: List[Point]) -> None:
 		"""
 		Command from game to make a move. After the move is computed it should call send_move().
 		:param board: 2D list with current board
@@ -51,7 +50,7 @@ class HumanPlayer(Player):
 	def __init__(self, end_count: int, mark: Mark, color: str) -> None:
 		Player.__init__(self, 'Human player', end_count, mark, color)
 
-	def move(self, board: List[BoardTile]) -> None:
+	def move(self, board: List[Point]) -> None:
 		"""
 		Nothing to do here, just wait for View's callback with clicked tile
 		that will call send_move() directly.
@@ -67,14 +66,14 @@ class RandomPlayer(Player):
 	def __init__(self, end_count: int, mark: Mark, color: str) -> None:
 		Player.__init__(self, 'Random player', end_count, mark, color)
 
-	def move(self, board: List[BoardTile]) -> None:
+	def move(self, board: List[Point]) -> None:
 		"""
 		Selects random empty tile and move there.
 		:param board: 2D list with current board.
 		"""
 		empty_tiles = board.get_empty_tiles()
 		tile_id = randrange(len(empty_tiles))
-		self.send_move(Point(empty_tiles[tile_id].position_x, empty_tiles[tile_id].position_y))
+		self.send_move(empty_tiles[tile_id])
 
 
 class MiniMaxPlayer(Player):
@@ -84,7 +83,7 @@ class MiniMaxPlayer(Player):
 	def __init__(self, end_count: int, mark: Mark, color: str) -> None:
 		Player.__init__(self, 'MiniMax player', end_count, mark, color)
 
-	def move(self, board: List[BoardTile]) -> None:
+	def move(self, board: List[Point]) -> None:
 		"""
 		Selects best move using minimax algorithm. Some special cases
 		like first move, one move from winning are hardcoded.

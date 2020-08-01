@@ -2,36 +2,6 @@ from utils import Point, Mark
 from typing import List, Optional
 
 
-class BoardTile:
-	"""
-	Represents one tile (box) on the game board.
-	"""
-	def __init__(self, position_x: int, position_y: int) -> None:
-		self.position_x = position_x
-		self.position_y = position_y
-		self.mark = None
-
-	def __repr__(self):
-		return f'[{self.position_x}:{self.position_y}]'
-
-	def __str__(self):
-		if self.mark is None:
-			return '.'
-		elif self.mark == Mark.X:
-			return 'x'
-		else:
-			return 'o'
-
-	def is_empty(self) -> bool:
-		"""
-		Check if tile is empty (no mark have been set)
-		:return: True if tile is empty, False otherwies
-		"""
-		if self.mark is None:
-			return True
-		return False
-
-
 class Board:
 	"""
 	Represents the game board.
@@ -41,10 +11,8 @@ class Board:
 		self.tiles = []
 		self.end_count = end_count
 
-		for x in range(self.size):
+		for i in range(self.size):
 			self.tiles.append([0]*self.size)
-			for y in range(self.size):
-				self.tiles[x][y] = BoardTile(x, y)
 
 	def copy(self):
 		"""
@@ -54,7 +22,7 @@ class Board:
 		b = Board(self.size, self.end_count)
 		for x in range(self.size):
 			for y in range(self.size):
-				b.tiles[x][y].mark = self.tiles[x][y].mark
+				b.tiles[x][y] = self.tiles[x][y]
 		return b
 
 	def is_valid_move(self, position: Point) -> bool:
@@ -63,7 +31,7 @@ class Board:
 		:param position: Point with position of the move
 		:return: True if move is valid, False otherwise
 		"""
-		if self.tiles[position.x][position.y].is_empty():
+		if self.tiles[position.x][position.y] == 0:
 			return True
 		return False
 
@@ -76,7 +44,7 @@ class Board:
 		"""
 		for x in range(self.size):
 			for y in range(self.size):
-				if not self.tiles[x][y].is_empty():
+				if not self.tiles[x][y] == 0:
 					result = self.check_around(x, y)
 					if result is not None:
 						return result
@@ -96,31 +64,28 @@ class Board:
 		for direction in [[-1,0], [-1,-1], [0,-1], [1,-1]]:
 			results = self.check_direction(x, y, direction[0], direction[1])
 			if results is not None:
-				points = []
-				for result in results:
-					points.append(Point(result.position_x, result.position_y))
-				return points
+				return results
 		return None
 
-	def check_direction(self, x: int, y: int, dx: int, dy: int) -> Optional[List[BoardTile]]:
+	def check_direction(self, x: int, y: int, dx: int, dy: int) -> Optional[List[Point]]:
 		"""
 		Check in direction [dx,dy] from point [x,y] for row, column or diagonale of
 		`end_count` marks. Function expects that [x,y] is not empty.
 		:param x: x position on board from where to check around
 		:param y: y position on board from where to check around
-		:return: None if game can continue. Otherwies returns list of BoardTile
+		:return: None if game can continue. Otherwies returns list of Points
 				 of winning marks.
 		"""
-		result = [self.tiles[x][y]]
-		mark = self.tiles[x][y].mark
+		result = [Point(x,y)]
+		mark = self.tiles[x][y]
 		for i in range(self.end_count-1):
 			x += dx
 			y += dy
 			if x >= 0 and y >= 0 and x < self.size and y < self.size:
-				if not self.tiles[x][y].mark == mark:
+				if not self.tiles[x][y] == mark:
 					return None
 				else:
-					result.append(self.tiles[x][y])
+					result.append(Point(x,y))
 			else:
 				return None
 		return result
@@ -131,9 +96,12 @@ class Board:
 		:param position: Point where the move was made
 		:mark: Mark of the player that made the move (X or O)
 		"""
-		self.tiles[position.x][position.y].mark = mark
+		if mark == Mark.X:
+			self.tiles[position.x][position.y] = 1
+		else:
+			self.tiles[position.x][position.y] = -1
 
-	def get_empty_tiles(self) -> List[BoardTile]:
+	def get_empty_tiles(self) -> List[Point]:
 		"""
 		Returns list of empty tiles on board.
 		:return: List of empty board tiles.
@@ -141,8 +109,8 @@ class Board:
 		empty_tiles = []
 		for x in range(self.size):
 			for y in range(self.size):
-				if self.tiles[x][y].is_empty():
-					empty_tiles.append(self.tiles[x][y])
+				if self.tiles[x][y] == 0:
+					empty_tiles.append(Point(x,y))
 		return empty_tiles
 
 	def get_hash_string(self):
@@ -161,9 +129,9 @@ class Board:
 		s = ''
 		for x in range(self.size):
 			for y in range(self.size):
-				if self.tiles[x][y].mark is None:
+				if self.tiles[x][y] == 0:
 					s += '_ '
-				elif self.tiles[x][y].mark == Mark.X:
+				elif self.tiles[x][y] == 1:
 					s += 'x '
 				else:
 					s += 'o '

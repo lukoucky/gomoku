@@ -1,6 +1,5 @@
 from utils import Point, Mark
 from typing import List, Callable, Optional
-from board import BoardTile
 import math
 
 class MiniMaxMove():
@@ -37,7 +36,7 @@ class MiniMax():
 		n_empty = len(self.board.get_empty_tiles())
 		for x in range(self.board.size):
 			for y in range(self.board.size):
-				if self.board.tiles[x][y].is_empty():
+				if self.board.tiles[x][y] == 0:
 					child = self.board.copy()
 					child.set_move(Point(x,y), self.mark) 
 					move = MiniMaxMove(Point(x,y))
@@ -63,7 +62,7 @@ class MiniMax():
 		return best_move
 
 
-	def minimax(self, node: List[BoardTile], depth: int, is_maximizing: bool, move: MiniMaxMove, alpha: int, beta: int) -> int:
+	def minimax(self, node: List[Point], depth: int, is_maximizing: bool, move: MiniMaxMove, alpha: int, beta: int) -> int:
 		"""
 		MiniMax algorithm search through all possible game states and finds the 
 		best for the player.
@@ -98,7 +97,7 @@ class MiniMax():
 			return value
 
 
-	def get_child_nodes(self, board: List[BoardTile], this_players_move: bool) -> List[List[BoardTile]]:
+	def get_child_nodes(self, board: List[Point], this_players_move: bool) -> List[List[Point]]:
 		"""
 		For currently serached board prepares all possible next moves
 		:param board: Currently serached board
@@ -116,13 +115,13 @@ class MiniMax():
 		child_nodes = []
 		for x in range(board.size):
 			for y in range(board.size):
-				if board.tiles[x][y].is_empty():
+				if board.tiles[x][y] == 0:
 					child = board.copy()
 					child.set_move(Point(x,y), mark) 
 					child_nodes.append(child)
 		return child_nodes
 
-	def get_board_result(self, board: List[BoardTile]) -> Optional[int]:
+	def get_board_result(self, board: List[Point]) -> Optional[int]:
 		"""
 		Checks if the board represents finnished game.
 		:param board: 2D list with board.
@@ -135,6 +134,8 @@ class MiniMax():
 		if len(result) == 0:
 			return 0
 
-		if board.tiles[result[0].x][result[0].y].mark == self.mark:
+		if board.tiles[result[0].x][result[0].y] == 1 and self.mark == Mark.X:
+			return 1
+		elif board.tiles[result[0].x][result[0].y] == -1 and self.mark == Mark.O:
 			return 1
 		return -1
