@@ -54,7 +54,7 @@ class Board:
 		Check if the game ends meaning that one of the players 
 		have `end_count` marks in row, column or diagonale
 		:return: None if game can continue. Otherwies returns list of Points
-				 with positions of winning marks.
+				 with positions of winning marks or empty list when game ends in draw.
 		"""
 		for x in range(self.size):
 			for y in range(self.size):
@@ -62,6 +62,8 @@ class Board:
 					result = self.check_around(x, y)
 					if result is not None:
 						return result
+		if len(self.get_empty_tiles()) == 0:
+			return []
 		return None
 	
 	def check_around(self, x: int, y: int) -> Optional[List[str]]:
@@ -113,11 +115,27 @@ class Board:
 		"""
 		self.tiles[position.x][position.y].mark = mark
 
+	def get_empty_tiles(self) -> List[BoardTile]:
+		"""
+		Returns list of empty tiles on board.
+		:return: List of empty board tiles.
+		"""
+		empty_tiles = []
+		for x in range(self.size):
+			for y in range(self.size):
+				if self.tiles[x][y].is_empty():
+					empty_tiles.append(self.tiles[x][y])
+		return empty_tiles
 
 	def __repr__(self):
 		s = ''
 		for x in range(self.size):
 			for y in range(self.size):
-				s += str(self.tiles[x][y]) + ', '
-			s = s[:-2] + '\n'
+				if self.tiles[x][y].mark is None:
+					s += '_ '
+				elif self.tiles[x][y].mark == Mark.X:
+					s += 'x '
+				else:
+					s += 'o '
+			s = s[:-1] + '\n'
 		return s
