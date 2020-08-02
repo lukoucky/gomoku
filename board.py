@@ -113,7 +113,25 @@ class Board:
 					empty_tiles.append(Point(x,y))
 		return empty_tiles
 
-	def get_hash_string(self):
+	def get_candidate_tiles(self) -> List[Point]:
+		"""
+		Returns list of all empty positions neighboring already placed marks
+		:return: List of Points with empty position suitable for new mark
+		"""
+		empty_tiles = set()
+		for x in range(self.size):
+			for y in range(self.size):
+				if not self.tiles[x][y] == 0:
+					for d in [[0,1], [1,1], [1,0], [1,-1], [0,-1], [-1,-1], [-1,0], [-1,1]]:
+						if x+d[0] >= 0 and y+d[1] >= 0 and x+d[0] < self.size and y+d[1] < self.size and self.tiles[x+d[0]][y+d[1]] == 0:
+							empty_tiles.add(Point(x+d[0],y+d[1]))
+		return list(empty_tiles)
+
+	def get_hash_string(self) -> str:
+		"""
+		Computes hash string of the current board state
+		:return: Unique string for current board state
+		"""
 		s = ''
 		for i in range(self.size):
 			s += ''.join(map(str,self.tiles[i]))
