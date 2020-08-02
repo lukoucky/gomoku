@@ -19,8 +19,8 @@ class MiniMaxMove():
 			self.end_draw += 1
 
 	def get_score(self):
-		# return self.end_win - self.end_lose
-		return self.value
+		return self.end_win - self.end_lose
+		# return self.value
 
 	def __repr__(self):
 		return f'{self.position} - W:{self.end_win}, L:{self.end_lose}, D:{self.end_draw}'
@@ -33,21 +33,20 @@ class MiniMax():
 		self.max_depth = max_depth
 
 	def compute(self):
-		n_empty = len(self.board.get_empty_tiles())
-		for x in range(self.board.size):
-			for y in range(self.board.size):
-				if self.board.tiles[x][y] == 0:
-					child = self.board.copy()
-					child.set_move(Point(x,y), self.mark) 
-					move = MiniMaxMove(Point(x,y))
-					depth = min(len(child.get_empty_tiles()), self.max_depth)
-					v = self.minimax(child, depth, False, move, -math.inf, math.inf)
-					move.value = v
-					self.moves.append(move)
-					print(f'Done move {len(self.moves)} from {n_empty}')
-					print(move, move.get_score())
-					print(v)
-					print('--------')
+		candidates = self.board.get_candidate_tiles()
+		for p in candidates:
+			if self.board.tiles[p.x][p.y] == 0:
+				child = self.board.copy()
+				child.set_move(p, self.mark) 
+				move = MiniMaxMove(p)
+				depth = min(len(child.get_candidate_tiles()), self.max_depth)
+				v = self.minimax(child, depth, False, move, -math.inf, math.inf)
+				move.value = v
+				self.moves.append(move)
+				print(f'Done move {len(self.moves)} from {len(candidates)}')
+				print(move, move.get_score())
+				print(v)
+				print('--------')
 
 	def get_best_move(self):
 		best_score = -math.inf
