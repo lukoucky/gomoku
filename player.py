@@ -80,8 +80,9 @@ class MiniMaxPlayer(Player):
 	"""
 	Player is using MiniMax algorthm to find the best move.
 	"""
-	def __init__(self, end_count: int, mark: Mark, color: str) -> None:
+	def __init__(self, end_count: int, mark: Mark, color: str, max_depth: int = 3) -> None:
 		Player.__init__(self, 'MiniMax player', end_count, mark, color)
+		self.max_depth = max_depth
 
 	def move(self, board: List[Point]) -> None:
 		"""
@@ -89,6 +90,6 @@ class MiniMaxPlayer(Player):
 		like first move, one move from winning are hardcoded.
 		:param board: 2D list with current board.
 		"""
-		mm = MiniMax(board, self.mark)
+		mm = MiniMax(board, self.mark, self.max_depth)
 		mm.compute()
 		self.send_move(mm.get_best_move())

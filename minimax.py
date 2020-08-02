@@ -26,11 +26,11 @@ class MiniMaxMove():
 		return f'{self.position} - W:{self.end_win}, L:{self.end_lose}, D:{self.end_draw}'
 
 class MiniMax():
-	def __init__(self, board, mark):
+	def __init__(self, board, mark, max_depth):
 		self.board = board
 		self.mark = mark
 		self.moves = []
-		self.max_depth = 3
+		self.max_depth = max_depth
 
 	def compute(self):
 		n_empty = len(self.board.get_empty_tiles())
